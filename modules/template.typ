@@ -56,6 +56,7 @@
 
   show: heading-styles.with(lang, numbering-depth)
   show: caption-styles.with(supplement-position: "left")
+  show: header-styles
   
 
   ////////////////////////////////////////////////
@@ -67,14 +68,20 @@
   set page(numbering: "i", footer: [])
   counter(page).update(1)
   title-page(author, lang, title, Degree, supervisors, advisors, translated-title, date)
-  set page(
-    footer: get-pagination(pagination-align),
-    header: get-headers())
+  set page(footer: get-pagination(pagination-align))
   declare-page(author, lang, Degree)
   abstract(german-abstract, english-abstract)
   // totally optional:
   //acknowledgements(lang, [Thanks everyone!], title: "thx")
   table-of-contents(lang, simple: true)
+  set page(
+    header: set-headers(
+      // all: [#author #sym.dot #short-title],
+      // this is overkill; for demonstration
+      even: [#get-open-section(level: 1)#h(1fr)#author #sym.dot #short-title],
+      odd: get-open-section(level: 2),
+      ),
+  )
   // the intro maybe should start on a right-hand side, but in any case the right-hand pages must be "odd"!
   pagebreak(to: "odd")
   //empty-page()
@@ -88,8 +95,7 @@
   body
 
   // The back matter
-  // pagebreak(to: "odd") now won't work!until https://github.com/typst/typst/issues/2841 is resolved
-  //just fix it by inserting an empty page
+  // pagebreak(to: "odd") now won't work! until https://github.com/typst/typst/issues/2841 is resolved just fix it by inserting an empty page
   // empty-page()
   // continue the front matter page counter
   set page(numbering: "i")

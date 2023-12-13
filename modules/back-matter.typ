@@ -19,16 +19,29 @@
 }
 
 
-#let list-of(thing, title) = {
+#let list-of(thing, title, left-width: 8mm, show-supplement: false) = {
   // this is used for list-of-figures and list-of-tables
+  // use the state
+  show outline: it => {
+    in-outline.update(true)
+    it
+    in-outline.update(false)
+  }
   show outline.entry: it => {
-    let (suppl, _, number, _, title, ..) = it.body.children
+    let c = it.element.caption
+    let (title, suppl) = (c.body, c.supplement)
+    let number = numbering(c.numbering, ..c.counter.at(it.element.location()))
     let loc = it.element.location()
+    let left-thing = {
+      if show-supplement [#suppl ]
+      number
+      if show-supplement [: ]
+    }
     box(width: 100%, stack(dir: ltr, 
       // the number of the "thing"
-      box(width: 5mm, link(loc, number)),
-      // the title, i.e. first [] of the caption, may be multi-line
-      box(width: 100% - page-num-width - 5mm, [
+      box(width: left-width, link(loc, left-thing)),
+      // the title, i.e. short part of the caption, may still be multi-line
+      box(width: 100% - page-num-width - left-width, [
         #link(loc, title)
         // the gap characters
         #box(width: 1fr, baseline: -1pt,

@@ -1,76 +1,103 @@
 
-#let get-headers() = {
-  // auf den linken Seiten, auf denen kein neues Level 1 Kapitel eröffnet wird, zeige das letzte Level 1 Kapitel
-  // auf den rechten Seiten zeige das letzte Level 2 Kapitel
+
+#let header-styles(body) = {
+  // This styles the headers
+  show selector(<all-header>): it => {
+    align(center, emph(it))
+  }
+  show selector(<left-header>): it => {
+    align(left, emph(it))
+  }
+  show selector(<right-header>): it => {
+    align(right, emph(it))
+  }
+  body
+}
+
+#let set-headers(
+  // This is just a utility function to make the template.typ cleaner, and it attaches the labels used for styling
+  all: none, odd: none, even: none) = {
   locate(loc => {
-    let current = loc.page()
-    let toc-page = query(<toc>, loc)
-    if toc-page.len() == 0 {
-      return
+    if all != none {
+      assert(odd == none and even == none)
+      [#all <all-header>]
+    } else if calc.even(loc.page()){
+      [#even <left-header>]
+    } else {
+      [#odd <right-header>]
     }
-    toc-page = toc-page.first().location().page()
-    if current < toc-page {
-      return
-    }
-    // only for pages at or below the table-of-contents
+  })
+} 
 
-    let matches = query(heading.where(level: 1), loc)
-    let has-level-1 = matches.any(m =>
-      m.location().page() == current
-    )
-    if has-level-1 {
+#let get-open-section(
+  level: 1, skip-level-1: true, descend-to-level: 4
+  ) = {
+  // if there are no headings with the given level in the current chapter but lower-level ones, use those
+  locate(loc => {
+
+    if query(heading.where(level: 1), loc).any(
+      m => m.location().page() == loc.page()
+    ) and skip-level-1 {
+      // no header on pages with a Level 1 heading = new chapter beginning
       return
     }
-    //only pages without any new Level 1 chapter beginning
-    
-    let l1s = heading.where(level: 1)
-    let chapter = query(l1s.before(loc), loc).last()
-    let chaploc = chapter.location()
-    let next_chap = query(l1s.after(loc), loc)
-    next_chap = if next_chap.len() > 0 { next_chap.first() } else { none }
 
-    let find(l) = {
-      // find the current and the next chapter 
+    let loc-neighbours(things) = {
+      let open = query(things.before(loc), loc).at(-1, default: none)
+      let next = query(things.after(loc), loc).at(0, default: none)
+      return (open, next)
+    }
+
+    let limit-query(above, below, things) = {
+      if above != none {
+        things = things.after(above.location())
+      }
+      if below != none {
+        things = things.before(below.location())
+      }
+      things
+    }
+
+    // find recursion init args
+    // headings that at least have the right level
+    let level-headings = heading.where(level: level)
+    // but do not go out of parent
+    let outer = loc-neighbours(heading.where(level: level - 1))
+    // throw some out
+    level-headings = limit-query(..outer, level-headings)
+    // find the current and the next chapter
+    let (open, next) = loc-neighbours(level-headings)
+
+    let find(l, open, next) = {
+      // recurse into lower levels
       let lh = heading.where(level: l)
-      let m = lh.before(loc)
-      if chapter != none {
-        m = m.and(lh.after(chaploc))
-      } 
-      if next_chap != none {
-        m = m.and(lh.before(next_chap.location()))
-      } 
-      m = query(m, loc)
-      if l >= 4 {
-        return (none, none)
-      } else if m.len() == 0 {
-        return find(l + 1)
+      let outer = loc-neighbours(heading.where(level: l - 1))
+      lh = limit-query(..outer, lh)
+      (open, next) = loc-neighbours(lh)
+      if l >= descend-to-level {
+        return none
+      } else if open == none and next == none {
+        return find(l + 1, open, next)
       } else {
-        return (m.last(), l)
+        return open
       }
     }   
 
-    let label_heading(_heading, alignment: left, level: 2) = {
-      if _heading.numbering == none {
-        align(alignment, [_#_heading.body _])
-      } else if level >= 3 {
-        align(alignment, [_#_heading.body _])
+    let section = find(level, open, next)
+    if section == none {
+      return none
+    } 
+
+    // a little formatting helper
+    let number(it) = {
+      if it.numbering == none {
+        none
       } else {
-        let _heading_num = numbering(_heading.numbering, ..counter(heading).at(_heading.location()))
-        align(alignment, [_#_heading_num #_heading.body _])
+        [#numbering(it.numbering, ..counter(heading).at(it.location())) ] // with space
       }
     }
 
-    if calc.even(loc.page()){
-      // left-hand pages 
-      label_heading(chapter)
-      return
-    } 
-    // right-hand pages      
-    let (section, l) = find(2)
-    //let section = find-section(chapter, 2)
-    if section == none {
-      return
-    }
-    label_heading(section, alignment: right, level: l)
+    // actually generate the content
+    number(section) + section.body
   })
 }

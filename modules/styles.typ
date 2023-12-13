@@ -2,7 +2,15 @@
 #let quantum = 8pt
 #let page-num-width = 2em
 #let space = 2.2cm
-#let raw-style = (font: "IBM Plex Mono") //, size: 12pt)
+#let raw-style = (font: "IBM Plex Mono", size: 1.2em) // the default font size in the doc defines what 1em is, and this always looked a bit too small, therefore scale it
+
+// use a state to manage whether the caption title or the full thing is displayed at different places in the do
+// https://github.com/typst/typst/issues/1295#issuecomment-1853762154
+#let in-outline = state("in-outline", false)
+
+#let flex-caption(title, rest) = locate(loc => 
+  if in-outline.at(loc) { title } else { title + rest }
+)
 
 // set in typewriter, blue against a gray background
 #let ibm(it) = {
@@ -10,7 +18,7 @@
   box(fill: luma(250), 
     outset: 2pt, radius: 2pt, 
     //it)
-    text(..raw-style, fill: rgb("#1A68AD"), it))
+    text(..raw-style, size: 1em, fill: rgb("#1A68AD"), it)) // use default size 1em here again
   h(1pt, weak:false) 
 }
 
@@ -38,10 +46,10 @@
 #let supplements(it, lang) = {
   if lang == "en" {
     // per default "Section", "Section", ...
-    return ([chapter], [section], [subsection]).at(it.level - 1)
+    return ([chapter], [section], [subsection]).at(it.level - 1, default: [subsection])
   } else {
     // i just made these up:
-    return ([Kapitel], [Abschnitt], [Absatz]).at(it.level - 1)
+    return ([Kapitel], [Abschnitt], [Absatz]).at(it.level - 1, default: [Absatz])
   }
 }
 
