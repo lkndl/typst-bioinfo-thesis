@@ -9,14 +9,14 @@ Particular thanks to [zagoli](https://github.com/zagoli/simple-typst-thesis), [y
 The TUM informatics and bioinformatics cover pages:
 ![tum cover pages](images/screen_00.png)
 
-Table of contents with numbering up to level 2 headings, well-aligned fill characters and roman page numbers for the appendix. 
+Table of contents with numbering up to level 2 headings, well-aligned fill characters and roman page numbers for the appendix: 
+
 ![a dummy table of contents](images/screen_01.png)
 
-Right-hand (=odd) page header with section info.
-![example header and caption](images/screen_02.png)
+![a wrap figure](images/screen_03.png "left-hand page header and wrapfig")
 
-Left-hand page header and wrapfig.
-![a wrap figure](images/screen_03.png)
+![example header and caption](images/screen_02.png  "right-hand page header with section info")
+
 
 Splitting the caption into two or more pieces of `content` will result in the first piece becoming the figure title in the list-of-figures:
 ```rs
