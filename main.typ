@@ -1,7 +1,5 @@
 
-#import "modules/template.typ": doc
-#import "modules/styles.typ": *
-#import "modules/figures.typ": *
+#import "modules/template.typ": *
 #import "chapters/0_abstract.typ": de_abstract, en_abstract
 #import "@preview/tablex:0.0.6": tablex, hlinex
 
