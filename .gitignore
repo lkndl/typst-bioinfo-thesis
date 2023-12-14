@@ -1,0 +1,8 @@
+.idea
+chapters
+images
+literature.bib
+*.pdf
+
+modules
+!modules/*.typ
