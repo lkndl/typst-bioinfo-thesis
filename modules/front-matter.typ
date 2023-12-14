@@ -1,36 +1,86 @@
 #import "styles.typ": *
+#import "footers.typ": *
 #import "@preview/outrageous:0.1.0"
 
+#let submission-info-table(args) = {
+  set align(center + bottom)
+  set par(leading: .5em)
+  set text(size: 14pt)  
+  let opts = (
+    columns: 2,
+    //inset: 0pt, 
+    align: left + top,
+    column-gutter: 5pt,
+    row-gutter: 5pt,
+    stroke: none,
+  )
 
-#let declare-page(author, lang, Degree) = {
+  if args.lang == "en" [
+    #table(
+      ..opts,
+      [Author:], [#args.author],
+      [Supervisor] + if args.supervisors.len() > 1 [s:] else [:], args.supervisors.join([ \ ]),
+      [Advisor] + if args.advisors.len() > 1 [s:] else [:], args.advisors.join([ \ ]),
+      [Submitted:], [#args.date.display("[day] [month repr:short] [year]")]
+    )
+  ] else if args.lang == "de" [
+    #table(
+      ..opts,
+      [Verfasser:], [#args.author],
+      [Themensteller:], args.supervisors.join([ \ ]),
+      [Betreuer:], args.advisors.join([ #parbreak() ]),
+      [Abgabedatum:], [#args.date.display("[day].[month].[year]")]
+    )
+  ]
+}
+
+#let make-cover(args) = {
+  // define a page numbering, but don't show it
+  set page(numbering: "a", footer: [])
+  // load the correct module for this flavour
+  import str(args.flavour + "-covers.typ") : *
+  cover-page(args) 
+}
+
+#let make-title(args) = {
+  counter(page).update(1)
+  pagebreak(weak: true, to: "odd")
+  // load the correct module for this flavour
+  import str(args.flavour + "-covers.typ") : *
+  title-page(args, submission-info-table(args))  
+}
+
+#let declare-page(args) = {
   pagebreak(weak: true, to: "odd")
   set heading(numbering: none, outlined: false, bookmarked: true, level: 1)
-  if lang == "en" [
+  if args.lang == "en" [
     = Declaration of Authorship
-    I confirm that this #box([#lower(Degree)'s thesis]) is my own work and I have documented all sources and material used.
-    #v(2cm)#h(2cm)Date#h(1fr)#author#h(2cm)   
-  ] else [
+    I confirm that this #box([#args.degree's thesis]) is my own work and I have documented all sources and material used.
+    #v(2cm)#h(2cm)Date#h(1fr)#args.author#h(2cm)   
+  ] else if args.lang == "de" [
     = Eigenständigkeitserklärung
-    Ich versichere, dass ich diese #box([#Degree’s Thesis]) selbständig verfasst und nur die angegebenen Quellen und Hilfsmittel verwendet habe.
-    #v(2cm)#h(2cm)Datum#h(1fr)#author#h(2cm)   
+    Ich versichere, dass ich diese #box([#args.Degree's Thesis]) selbständig verfasst und nur die angegebenen Quellen und Hilfsmittel verwendet habe.
+    #v(2cm)#h(2cm)Datum#h(1fr)#args.author#h(2cm)   
   ] 
 }
 
-#let acknowledgements(lang, body, title: none) = {
+#let acknowledgements(lang, content, title: none) = {
   pagebreak(weak: true, to: "odd")
   set heading(numbering: none, outlined: false, bookmarked: true, level: 1)
   if title != none [= #title] else if lang == "en" [= Acknowledgements] else [= Danksagung]
-  [#body]
+  content
 }
 
 #let abstract(german, english) = {
   pagebreak(weak: true, to: "even")
   set heading(numbering: none, outlined: false, bookmarked: true, level: 1)
-  [= Zusammenfassung]
-  [#german]
-  pagebreak()
-  [= Abstract]
-  [#english]
+  [
+    = Zusammenfassung
+    #german
+    #pagebreak()
+    = Abstract
+    #english
+  ]
 }
 
 

@@ -1,6 +1,7 @@
 #import "styles.typ": *
 
-#let head() = {
+#let info-front-style(body) = {
+  set align(center)
   set block(spacing: 1em)
   align(top, [
     #image("logos/tum_logo.svg", width: 25%)
@@ -9,65 +10,33 @@
     upper([School of Computation, \ Information and Technology -- \ Informatics])))
     #text(weight: "light", size: 18pt, upper([Technische Unversität München]))
   ])
-}
-
-#let cover-page(author, lang, title, Degree) = {
-  set align(center)
-  head()
   set block(spacing: 2.5em)
   set par(justify: false)
   set text(size: 18pt, hyphenate: false)
-  [
-    #v(1em)
-    #Degree's Thesis in Informatics \
-    #par(leading: .5em, text(weight: "medium", size: 26pt, title))
-    #author
-    #align(bottom, image("logos/tum_in_logo.svg", width: 20%))
-  ]
+
+  body
 }
 
-#let title-page(
-  author, lang, title, Degree, supervisors, advisors, translated-title, date) = {
-  pagebreak(weak: true, to: "odd")
-  set align(center)
-  head()
-  set block(spacing: 2.5em) 
-  set par(justify: false)
-  set text(size: 18pt, hyphenate: false)
+#let cover-page(args) = {
+  show: info-front-style
+  [
+    #v(1em)
+    #{args.Degree + if args.lang == "en" ['s Thesis in Informatics] else [arbeit in Informatik]} \
+    #par(leading: .5em, text(weight: "medium", size: 26pt, args.title))
+    #args.author
+    #align(bottom, image("logos/tum_in_logo.svg", width: 20%))
+  ]
+  // the scope of show: info-front-style i.e. it's body ends here because cover-page is not passed a body - just args
+}
+
+#let title-page(args, submission-info-content) = {
+  show: info-front-style
   [
     #v(0em)
-    #Degree's Thesis in Informatics \
-    #par(leading: .5em, text(weight: "medium", size: 22pt, title))
+    #{args.Degree + if args.lang == "en" ['s Thesis in Informatics] else [arbeit in Informatik]} \
+    #par(leading: .5em, text(weight: "medium", size: 22pt, args.title))
     #v(-1em)
-    #par(leading: .5em, text(weight: "medium", size: 22pt, translated-title)) 
+    #par(leading: .5em, text(weight: "medium", size: 22pt, args.translated-title)) 
   ]
-
-  set align(bottom)
-  set text(size: 14pt)
-  let opts = (
-    columns: 2,
-    //inset: 0pt, 
-    align: left + top,
-    column-gutter: 5pt,
-    row-gutter: 5pt,
-    stroke: none,
-  )
-
-  if lang == "en" [
-    #table(
-      ..opts,
-      [Author:], [#author],
-      [Supervisor] + if supervisors.len() > 1 [s:] else [:], supervisors.join([ \ ]),
-      [Advisor] + if advisors.len() > 1 [s:] else [:], advisors.join([ \ ]),
-      [Submitted:], [#date.display("[day] [month repr:short] [year]")]
-    )
-  ] else if lang == "de" [
-    #table(
-      ..opts,
-      [Verfasser:], [#author],
-      [Themensteller:], supervisors.join([ \ ]),
-      [Betreuer:], advisors.join([ \ ]),
-      [Abgabedatum:], [#date.display("[day].[month].[year]")]
-    )
-  ]
+  submission-info-content
 }

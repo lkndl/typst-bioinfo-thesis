@@ -3,12 +3,12 @@
 #import "headers.typ": *
 #import "footers.typ": *
 #import "figures.typ": *
-#import "bioinfo-covers.typ": cover-page as bioinfo-cover, title-page as bioinfo-title
-#import "info-covers.typ": cover-page as info-cover, title-page as info-title
 #import "front-matter.typ": *
 #import "back-matter.typ": *
 
-#let doc(
+// These are the fields you can or
+// should pass to the template function
+#let default-args = arguments(
   author: "nobody",
   lang: "en",
   title: none,
@@ -24,28 +24,36 @@
   flavour: "info",
   numbering-depth: 2,
   pagination-align: "outside",
-  
-  // The content that trails after, in main.typ
-  body
-) = {
+)
 
-  assert(lang in ("en", "de"), message: "only English or German are allowed")
-  assert(degree in ("bachelor", "master"), message: "this template only works for B.Sc. or M.Sc. degrees right now")
-  let Degree = [#box([#upper(degree.at(0))#degree.slice(1)])] 
-  assert(pagination-align in ("outside", "inside", left, right, center))
-  assert(flavour in ("bioinfo", "info"), message: "only two variants in the box: bioinfo and info")
-  let (cover-page, title-page) = if flavour == "info" { (info-cover, info-title) } else { (bioinfo-cover, bioinfo-title) }
+#let doc(..passed-args, body) = {
+  // merge into a single option namespace
+  let args = default-args.named() + passed-args.named()
 
-  set document(author: author, title: short-title)
+  if args.lang not in ("en", "de") {
+    panic([This template is set up for English "en" or German "de". If you want to use a different language, it's easiest to change all "de"-dependant code to your language, then delete/change this block. Maybe you want to make a pull request?])
+  }
+  if args.flavour not in ("info", "bioinfo") {
+    panic([Don't know this flavour: #flavour. If you did that on purpose, build an "#{args.flavour}-covers.typ" module that implements a "cover-page" and "title-page", then delete/change this block.])
+  }
+  if args.degree not in ("bachelor", "master") {
+    panic([This template is meant for "bachelor" or "master" theses. You passed #args.degree and that might turn out weird somewhere! Delete/change this block once you checked.])
+  }
+  args.Degree = [#box([#upper(args.degree.at(0))#args.degree.slice(1)])] 
+
+  ////////////////////////////////////////////////
+  // document setup
+  set document(
+    author: args.author, 
+    title: args.short-title)
   set page(
     paper: "a4",
     margin: (bottom: 3cm, rest: 2.5cm),
   )
   set text(
-    font: "Helvetica Neue", // "Liberation Sans", // "IBM Plex Sans",  // "New Computer Modern Sans",
+    font: "Helvetica Neue",
     size: 12pt,
-    //fill: red,
-    lang: lang,
+    lang: args.lang,
   )
   set par(justify: true, leading: .88em)
   set block(above: 8pt, below: 24pt)
@@ -54,33 +62,35 @@
   // sans-serif and equal-width font for math
   show math.equation: set text(font: "Fira Math")
 
-  show: heading-styles.with(lang, numbering-depth)
+  show: heading-styles.with(args.lang, args.numbering-depth)
   show: caption-styles.with(supplement-position: "left")
   show: header-styles
   
 
   ////////////////////////////////////////////////
   // actual document content starts here 
-  
-  // The front matter
-  set page(numbering: "a", footer: []) // define a numbering, but don't show it
-  cover-page(author, lang, title, Degree)
+  // The front matter: 
+  make-cover(args)
   set page(numbering: "i", footer: [])
-  counter(page).update(1)
-  title-page(author, lang, title, Degree, supervisors, advisors, translated-title, date)
-  set page(footer: get-pagination(pagination-align))
-  declare-page(author, lang, Degree)
-  abstract(german-abstract, english-abstract)
+  make-title(args)
+  set page(footer: get-pagination(args.pagination-align))
+  declare-page(args)
+  abstract(
+    args.german-abstract, args.english-abstract)
   // totally optional:
-  //acknowledgements(lang, [Thanks everyone!], title: "thx")
-  table-of-contents(lang, simple: true)
+  // acknowledgements(args.lang, [Thanks everyone!], title: "thx")
+  table-of-contents(args.lang, simple: true)
+
+  ////////////////////////////////////////////////
+  // some more main body setup 
   set page(
     header: set-headers(
-      // all: [#author #sym.dot #short-title],
+      // all: [#args.author #sym.dot #args.short-title],
       // this is overkill; for demonstration
-      even: [#get-open-section(level: 1)#h(1fr)#author #sym.dot #short-title],
+      even: [#get-open-section(level: 1)#h(1fr)#args.author #sym.dot #args.short-title],
       odd: get-open-section(level: 2),
       ),
+    // footer: get-pagination(args.pagination-align)
   )
   // the intro maybe should start on a right-hand side, but in any case the right-hand pages must be "odd"!
   pagebreak(to: "odd")
@@ -94,13 +104,14 @@
   // The main content
   body
 
+  ////////////////////////////////////////////////
   // The back matter
   // pagebreak(to: "odd") now won't work! until https://github.com/typst/typst/issues/2841 is resolved just fix it by inserting an empty page
   // empty-page()
   // continue the front matter page counter
   set page(numbering: "i")
   continue-page-counter-from(<toc-end>, shift: none)
-  references(bibliography-file: bibliography-file, lang: lang)
-  list-of-figures(lang)
-  list-of-tables(lang)
+  references(bibliography-file: args.bibliography-file, lang: args.lang)
+  list-of-figures(args.lang)
+  list-of-tables(args.lang)
 }

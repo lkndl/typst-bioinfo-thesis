@@ -4,5 +4,6 @@ images
 literature.bib
 *.pdf
 
-modules
-!modules/*.typ
+modules/citation_styles
+modules/fonts
+modules/logos/tum_logo_o*
