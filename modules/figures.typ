@@ -113,12 +113,14 @@
       columns = columns.rev()
     }
     
-    set align(ali.y) // this sets the vertical alignment between figure and text. 
-    grid(
-      columns: col-widths, 
-      gutter: gutter,
-      ..columns
-    )
+    block[
+      #set align(ali.y) // this sets the vertical alignment between figure and text. 
+      #grid(
+        columns: col-widths, 
+        gutter: gutter,
+        ..columns
+      )
+    ]
 }
 
 #let side-cap-fig(
