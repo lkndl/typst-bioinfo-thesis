@@ -8,7 +8,7 @@
     #par(leading: .5em, text(
     weight: "extralight", size: 26pt, 
     upper([School of Computation, \ Information and Technology -- \ Informatics])))
-    #text(weight: "light", size: 18pt, upper([Technische Unversität München]))
+    #text(weight: "light", size: 18pt, upper([Technische Universität München]))
   ])
   set block(spacing: 2.5em)
   set par(justify: false)
