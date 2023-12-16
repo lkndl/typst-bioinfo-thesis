@@ -102,7 +102,7 @@ $
   fig-width: 60%,
   caption-width: 40% - 1em, // because gutter: 1em,
   caption-pos: bottom + left,
-  caption: flex-caption([Side caption example], [. Look it's floating! In addition to `caption-pos` and two `-width`s, you can pass `placement` to `side-cap-fig`; also to `wrap-fig`. But not all combinations work -- have a look at #{show link: underline; link("https://typst.app/docs/reference/layout/place/", [the docs])} if the figure crashes into text or the compiler does. The underlining show rule is scoped, see? Also #underline[underlined] text; un-underlined #link("https://youtu.be/dQw4w9WgXcQ?feature=shared&t=42", [link]).]),
+  caption: flex-caption([Side caption example], [. Look it's floating! In addition to `caption-pos` and two `-width`s, you can pass `placement` to `side-cap-fig`. But not all combinations work -- have a look at #{show link: underline; link("https://typst.app/docs/reference/layout/place/", [the docs])} if the figure crashes into text or the compiler does. The underlining show rule is scoped, see? Also #underline[underlined] text; un-underlined #link("https://youtu.be/dQw4w9WgXcQ?feature=shared&t=42", [link]).]),
   label: <floaty>,
   supplement-position: "inline",
   placement: arguments(bottom + right, float: true),

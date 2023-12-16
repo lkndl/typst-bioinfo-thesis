@@ -88,7 +88,6 @@
   position: default-2D-align, 
   gutter: 1em, 
   supplement-position: "left",
-  placement: none, 
   ..named,
   body
   ) = {
@@ -115,11 +114,11 @@
     }
     
     set align(ali.y) // this sets the vertical alignment between figure and text. 
-    floaty(grid(
+    grid(
       columns: col-widths, 
       gutter: gutter,
       ..columns
-      ), placement)
+    )
 }
 
 #let side-cap-fig(
