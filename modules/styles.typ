@@ -30,7 +30,7 @@
       panic()
     }
     match = match.first().location()
-    [#link(match, box[#supplement #match.page()])]
+    link(match, box([#supplement #counter(page).at(match).first()]))
   })
 }
 
