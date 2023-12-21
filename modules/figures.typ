@@ -12,6 +12,19 @@
   unravel(funcs, poss, nameds, f(..p, ..n)[#body])
 }
 
+#let nest(stuff, body) = {
+  if stuff in (none, ()) or type(stuff) != array {
+    return body
+  }
+  let thing = stuff.pop()
+  if type(thing) != arguments {
+    return body
+  }
+  let func = thing.pos().at(0)
+  let args = arguments(..thing.pos().slice(1), ..thing.named())
+  nest(stuff, func(..args)[#body])
+}
+
 #let floaty(thing, args) = {
   if args != none {
     place(
@@ -23,9 +36,11 @@
   }       
 }
 
+// This is the function / show rule that styles figure captions.
 #let caption-styles(
-  supplement-position: "left", 
-  container: ((box,), ((),), ((:),)),
+  supplement-position: "left",
+  // container: ((box,), ((),), ((:),)),
+  container: (arguments(box,)),
   body) = {
     assert(supplement-position in ("left", "inline", "above"))
   // left-aligned, not wider than the outer scope.
@@ -37,11 +52,9 @@
       body
     }
     if supplement-position == "inline" {
-      unravel(
-        ..container
-      )[#show: style; *#it.supplement #it.counter.display(it.numbering):* #it.body]
+      nest(container)[#show: style; *#it.supplement #it.counter.display(it.numbering):* #it.body]
     } else {
-      unravel(..container)[
+      nest(container)[
         #show: style
         #let named = {
           if supplement-position == "left" {
@@ -53,7 +66,7 @@
         }
         #grid(
         ..named,
-        [*#it.supplement #it.counter.display(it.numbering):*], 
+        [*#it.supplement #it.counter.display(it.numbering):*],
         it.body)
       ]
     }
@@ -173,9 +186,11 @@
     show: caption-styles.with(
       supplement-position: supplement-position,
       container: (
-        (place, box), 
-        ((ali,), ()), 
-        ((dx: dx), (width: cap-width)))
+        // (place, box),
+        // ((ali,), ()),
+        // ((dx: dx), (width: cap-width)))
+        arguments(place, ali, dx:dx),
+        arguments(box, width: cap-width))
     )
 
     // actually this is going to be a grid again
