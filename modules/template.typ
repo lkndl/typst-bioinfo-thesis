@@ -88,7 +88,7 @@
       // all: [#args.author #sym.dot #args.short-title],
       // this is overkill; for demonstration
       even: [#get-open-section(level: 1)#h(1fr)#args.author #sym.dot #args.short-title],
-      odd: get-open-section(level: 2),
+      odd: get-open-section(level: 2, descend-to-level: 3),
       ),
     // footer: get-pagination(args.pagination-align)
   )

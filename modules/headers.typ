@@ -30,7 +30,7 @@
 } 
 
 #let get-open-section(
-  level: 1, skip-level-1: true, descend-to-level: 4
+  level: 1, skip-level-1: true, descend-to-level: none
   ) = {
   // if there are no headings with the given level in the current chapter but lower-level ones, use those
   locate(loc => {
@@ -74,7 +74,7 @@
       let outer = loc-neighbours(heading.where(level: l - 1))
       lh = limit-query(..outer, lh)
       (open, next) = loc-neighbours(lh)
-      if l >= descend-to-level {
+      if descend-to-level != none and l >= descend-to-level {
         return none
       } else if open == none and next == none {
         return find(l + 1, open, next)
