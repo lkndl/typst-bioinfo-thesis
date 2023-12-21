@@ -44,10 +44,8 @@
       box(width: 100% - page-num-width - left-width, [
         #link(loc, title)
         // the gap characters
-        #box(width: 1fr, baseline: -1pt,
-          align(right, scale(x: -100%, line(
-            length: 100%, stroke: (dash: ("dot", quantum)))))
-      )]),
+        #box(width: 1fr, align(right, typst-repeat(justify: false, box(width: quantum, "."))))
+      ]),
       // the page number, bottom-aligned for long figure titles
       align(bottom + right, 
         box(width: page-num-width, link(loc, it.page)))

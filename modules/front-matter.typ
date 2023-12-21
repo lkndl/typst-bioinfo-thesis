@@ -95,10 +95,7 @@
       font-weight: ("bold", auto),
       vspace: (32pt, none),
       fill-right-pad: 5pt, 
-      fill: (none, scale(x: -100%, align(right, line(
-        length: 100%, 
-        stroke: (dash: ("dot", quantum))
-      )))),
+      fill: (none, align(right, typst-repeat(justify: false, box(width: quantum, "."))))
     )
     [#outline(title: toc-title, indent: auto) <toc> #metadata("toc-end") <toc-end>
     ]
