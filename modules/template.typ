@@ -1,10 +1,11 @@
 
 #import "styles.typ": *
-#import "headers.typ": *
+// #import "headers.typ": *
 #import "footers.typ": *
 #import "figures.typ": *
 #import "front-matter.typ": *
 #import "back-matter.typ": *
+#import "@preview/hydra:0.3.0": hydra
 
 // These are the fields you can or
 // should pass to the template function
@@ -64,7 +65,7 @@
 
   show: heading-styles.with(args.lang, args.numbering-depth)
   show: caption-styles.with(supplement-position: "left")
-  show: header-styles
+  // show: header-styles
   
 
   ////////////////////////////////////////////////
@@ -84,12 +85,14 @@
   ////////////////////////////////////////////////
   // some more main body setup 
   set page(
-    header: set-headers(
-      // all: [#args.author #sym.dot #args.short-title],
-      // this is overkill; for demonstration
-      even: [#get-open-section(level: 1)#h(1fr)#args.author #sym.dot #args.short-title],
-      odd: get-open-section(level: 2, descend-to-level: 3),
-      ),
+    header: locate(loc => {
+      if calc.even(loc.page()) {
+        // this is overkill; for demonstration
+        emph[#hydra(1, loc: loc)#h(1fr)#args.author #sym.dot #args.short-title]
+      } else {
+        emph[#h(1fr)#hydra(2, loc: loc)]
+      }
+    }),
     // footer: get-pagination(args.pagination-align)
   )
   // the intro maybe should start on a right-hand side, but in any case the right-hand pages must be "odd"!
