@@ -44,7 +44,9 @@
 
 // fix reference styles: level 1 headings are chapter, not Section
 #let supplements(it, lang) = {
-  if lang == "en" {
+  if "level" not in it.fields() {
+    return none
+  } else if lang == "en" {
     // per default "Section", "Section", ...
     return ([chapter], [section], [subsection]).at(it.level - 1, default: [subsection])
   } else {
