@@ -44,7 +44,7 @@
       box(width: 100% - page-num-width - left-width, [
         #link(loc, title)
         // the gap characters
-        #box(width: 1fr, align(right, typst-repeat(justify: false, box(width: quantum, "."))))
+        #box(width: 1fr, align(right, repeat(justify: false, box(width: quantum, "."))))
       ]),
       // the page number, bottom-aligned for long figure titles
       align(bottom + right, 
@@ -52,9 +52,9 @@
     ))
   }
 
-  locate(loc => {
+  context {
     let figures = figure.where(kind: thing)
-    if query(figures, loc).len() == 0 {
+    if query(figures).len() == 0 {
       return // break if none found
     }
     //pagebreak()
@@ -64,7 +64,7 @@
       title: none,
       target: figures,
     ) 
-  })
+  }
 }
 
 
