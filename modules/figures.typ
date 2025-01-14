@@ -52,7 +52,7 @@
       body
     }
     if supplement-position == "inline" {
-      nest(container)[#show: style; *#it.supplement #it.counter.display(it.numbering):* #it.body]
+      nest(container)[#show: style; *#it.supplement #context{it.counter.display(it.numbering)}:* #it.body]
     } else {
       nest(container)[
         #show: style
@@ -66,7 +66,7 @@
         }
         #grid(
         ..named,
-        [*#it.supplement #it.counter.display(it.numbering):*],
+        context [*#it.supplement #it.counter.display(it.numbering):*],
         it.body)
       ]
     }
