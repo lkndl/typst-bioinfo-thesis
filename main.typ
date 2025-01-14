@@ -125,20 +125,20 @@ Link to an unnumbered section: @related is far up there, as is @others.
 Quantum entanglement meets genomic entanglement as our algorithms traverse the DNA multiverse. Much like the unpredictable nature of xkcd's "Random Number" (#221), the results paint a colorful tapestry of possibilities, offering glimpses into the potential of quantum-enhanced bioinformatics applications. 
 
 #align(center, box(width: 85%, [
-// helper function for table alignment
-#let aligner(column, row) = {
-  if row == 0 {
-    if column == 0 or column == 2 {
-      top + left
+  // helper function for table alignment
+  #let aligner(column, row) = {
+    if row == 0 {
+      if column == 0 or column == 2 {
+        top + left
+      } else {
+        top + right
+      }
+    } else if column > 2 {
+      bottom + right
     } else {
-      top + right
+      bottom + left
     }
-  } else if column > 2 {
-    bottom + right
-  } else {
-    bottom + left
   }
-}
   #set text(hyphenate: false)
   #figure(
     kind: table,
@@ -146,17 +146,17 @@ Quantum entanglement meets genomic entanglement as our algorithms traverse the D
       stroke: none,
       inset: (x: 6pt + 16pt, y: 6pt),
       columns: 6, // or just a number
-        rows: (21pt, 23pt, auto, auto, 20pt, auto, auto),
-        align: (column, row) => aligner(column, row),
-        "size", "source", "split", "spp.", "proteins", "PPIs",
+      rows: (21pt, 23pt, auto, auto, 20pt, auto, auto),
+      align: (column, row) => aligner(column, row),
+      "size", "source", "split", "spp.", "proteins", "PPIs",
       table.hline(),
 
-        "full", `APID`, "train", $18$, $39393$, $143171$,
-        "", "", "validate", $10$, $1750$, $2279$,
-        "", `HuRI`, "test", $1$, $4458$, $19106$,
-        "small", `APID`, "train", $8$, $8565$, $15586$,
-        "", "", "validate", $7$, $818$, $1184$,
-        "", `HuRI`, "test", $1$, $430$, $666$,
+      "full", `APID`, "train", $18$, $39393$, $143171$,
+      "", "", "validate", $10$, $1750$, $2279$,
+      "", `HuRI`, "test", $1$, $4458$, $19106$,
+      "small", `APID`, "train", $8$, $8565$, $15586$,
+      "", "", "validate", $7$, $818$, $1184$,
+      "", `HuRI`, "test", $1$, $430$, $666$,
     ),
     caption: flex-caption([PPI data in the sets], [; disregarding negatives and extra compensation proteins. Finished sets are about twice or $11 times$ the size.])
   )
