@@ -21,17 +21,19 @@
 }
 
 // refer to the page of a labeled element in the doc
-#let ref-page(label, supplement: "page") = {
-  locate(loc => {
-    let match = query(label, loc)
-    if match == none {
-      panic()
+#let ref-page(label, supplement: "page") = context {
+    let match = query(label)
+    let l = match.len()
+    if l == 0 {
+      panic("Found no elements for the label", label)
+    } else if l > 1 {
+      panic("Found more than one element for the label", label)
     }
-    match = match.first().location()
-    link(match, box([#supplement #counter(page).at(match).first()]))
-  })
+    let loc = match.at(0).location()
+    link(loc, box([#supplement #counter(page).at(loc).first()]))
 }
 
+// if you need a really empty page with no headers or footers
 #let empty-page() = {
   page([], header: [], footer: [])
 }
@@ -93,18 +95,17 @@
   body
 }
 
-
 #let continue-page-counter-from(label, shift: none) = {
   // shift: if it's broken don't fret - just fix it. Life is more than LaTeX or Typst
-  locate(loc => {
+  context {
     let i = {
       if shift != none {
         shift
       } else {
-        -int(calc.odd(loc.page()))
+        -int(calc.odd(here().page()))
       }
     }
-    let toc-end = query(label, loc)
+    let toc-end = query(label)
     let restart-at = {
       if toc-end.len() == 0 {
         1
@@ -113,5 +114,5 @@
       }
     // locate can only return content, therefore update the page counter here instead
     counter(page).update(restart-at + i)
-  })
+  }
 }
