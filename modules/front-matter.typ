@@ -1,6 +1,6 @@
 #import "styles.typ": *
 #import "footers.typ": *
-#import "@preview/outrageous:0.1.0"
+#import "@preview/outrageous:0.3.0"
 
 #let submission-info-table(args) = {
   set align(center + bottom)
@@ -93,7 +93,7 @@
       font-weight: ("bold", auto),
       vspace: (32pt, none),
       fill-right-pad: 5pt, 
-      fill: (none, align(right, typst-repeat(justify: false, box(width: quantum, "."))))
+      fill: (none, align(right, repeat(justify: false, box(width: quantum, "."))))
     )
     [#outline(title: toc-title, indent: auto) <toc> #metadata("toc-end") <toc-end>
     ]
@@ -157,6 +157,6 @@
       layoutor(number, title, loc, it.page, indent: 2em + 5pt) // more ident, but actually not
     }
 
-    [#outline(title: toc-title) <toc> #metadata("toc-end") <toc-end>]
+    [#outline(title: toc-title, depth: 3) <toc> #metadata("toc-end") <toc-end>]
   }
 }
