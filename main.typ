@@ -1,7 +1,7 @@
 
 #import "modules/template.typ": *
 #import "chapters/0_abstract.typ": de_abstract, en_abstract
-#import "@preview/tablex:0.0.6": tablex, hlinex
+// #import "@preview/tablex:0.0.6": tablex, hlinex
 
 
  #show: doc.with(
@@ -111,6 +111,7 @@ $
 = results <results>
 Quantum entanglement meets genomic entanglement as our algorithms traverse the DNA multiverse. Much like the unpredictable nature of xkcd's "Random Number" (#221), the results paint a colorful tapestry of possibilities, offering glimpses into the potential of quantum-enhanced bioinformatics applications. 
 
+#align(center, box(width: 85%, [
 // helper function for table alignment
 #let aligner(column, row) = {
   if row == 0 {
@@ -125,21 +126,17 @@ Quantum entanglement meets genomic entanglement as our algorithms traverse the D
     bottom + left
   }
 }
-#align(center, box(width: 85%, 
-  figure(
+  #set text(hyphenate: false)
+  #figure(
     kind: table,
-    pad(
-      left: 0em, right: 0em, top: -1em,
-      tablex(
-        auto-lines: false,
-        stroke: .5pt,
-        inset: 6pt,
-        columns: (auto, auto, auto, auto, auto, auto), // or just a number
-        column-gutter: 16pt, 
+    table(
+      stroke: none,
+      inset: (x: 6pt + 16pt, y: 6pt),
+      columns: 6, // or just a number
         rows: (21pt, 23pt, auto, auto, 20pt, auto, auto),
         align: (column, row) => aligner(column, row),
         "size", "source", "split", "spp.", "proteins", "PPIs",
-        hlinex(),
+      table.hline(),
 
         "full", `APID`, "train", $18$, $39393$, $143171$,
         "", "", "validate", $10$, $1750$, $2279$,
@@ -147,8 +144,8 @@ Quantum entanglement meets genomic entanglement as our algorithms traverse the D
         "small", `APID`, "train", $8$, $8565$, $15586$,
         "", "", "validate", $7$, $818$, $1184$,
         "", `HuRI`, "test", $1$, $430$, $666$,
-      ),
     ),
     caption: flex-caption([PPI data in the sets], [; disregarding negatives and extra compensation proteins. Finished sets are about twice or $11 times$ the size.])
   )
-)) <mytable>
+
+])) <mytable>
