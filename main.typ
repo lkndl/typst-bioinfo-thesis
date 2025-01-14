@@ -1,8 +1,6 @@
 
 #import "modules/template.typ": *
 #import "chapters/0_abstract.typ": de_abstract, en_abstract
-// #import "@preview/tablex:0.0.6": tablex, hlinex
-
 
  #show: doc.with(
   author: "Rosalind Franklinson",
@@ -37,8 +35,13 @@
 === Motivation
 As xkcd wisely reminds us, "There's nothing quite so beautiful as watching someone code in a language they're fluent in." In this linguistic dance between quantum bits and biological sequences, we strive to achieve fluency in the unique syntax that intertwines the principles of quantum computation with the complex language of life. 
 
-=== Background and related work
+=== Background and related work <related>
 Drawing inspiration from xkcd #link("https://xkcd.com/378/", "#378"), where "Python" is the programming language of choice for researchers plotting world domination, our research aligns itself with the power and elegance of Pythonic quantum algorithms. The literature review explores the quantum landscape, guiding us through the footsteps of pioneers like Schrödinger and Turing, who, if xkcd is to be believed (#795), may have shared a cup of coffee in a parallel computational universe.
+// #lorem(600)
+==== some works <works>
+#lorem(10)
+==== other works <others>
+#lorem(10)
 
 === Outline
 In the spirit of xkcd #327, we adopt a robust methodology akin to the "Exploits of a Mom," ensuring the security and integrity of our quantum bioinformatics framework. Through the careful implementation of quantum gates and bioinformatic algorithms, we navigate the vast space of possibilities, akin to the legendary "Lorenz Attractor" (#137).
@@ -65,13 +68,23 @@ Also: #lorem(200)
 
 === method A
 This is a little bit of math and a link to @results, which you can find on #ref-page(<results>):
+
+#set math.equation(numbering: "(1)")
+
 $
 "HVAL" = "PIDE" - cases(
   100 & forall L <= 11,
   480 dot L^(-0.32[1+exp(-L\/1000)])#h(1em) & forall L <= 450,
   19.5 & forall L > 450
 )
-$
+$ <ratio>
+
+
+With @ratio, we get:
+$ F_n = floor(1 / sqrt(5) phi.alt^n) $
+
+
+Link to an unnumbered section: @related is far up there, as is @others.
 
 #wrap-fig(
   fig: align(right, image("images/laser_pointer_more_power.png", width: 60%)), 
