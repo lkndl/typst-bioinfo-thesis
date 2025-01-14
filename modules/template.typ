@@ -5,7 +5,7 @@
 #import "figures.typ": *
 #import "front-matter.typ": *
 #import "back-matter.typ": *
-#import "@preview/hydra:0.3.0": hydra
+#import "@preview/hydra:0.5.2": hydra
 
 // These are the fields you can or
 // should pass to the template function
@@ -93,14 +93,14 @@
   ////////////////////////////////////////////////
   // some more main body setup 
   set page(
-    header: locate(loc => {
-      if calc.even(loc.page()) {
+    header: context {
+      if calc.even(here().page()) {
         // this is overkill; for demonstration
-        emph[#hydra(1, loc: loc)#h(1fr)#args.author #sym.dot #args.short-title]
+        emph[#hydra(1)#h(1fr)#args.author #sym.dot #args.short-title]
       } else {
-        emph[#h(1fr)#hydra(2, loc: loc)]
+        emph[#h(1fr)#hydra(2)]
       }
-    }),
+    },
     // footer: get-pagination(args.pagination-align)
   )
   // the intro should start on a right-handed page
