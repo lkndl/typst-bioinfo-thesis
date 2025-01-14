@@ -70,10 +70,18 @@
 
   ////////////////////////////////////////////////
   // actual document content starts here 
+  // define a page numbering, but don't show it
+  set page(numbering: "a", footer: [])
   // The front matter: 
   make-cover(args)
+  // break to a right-handed page
+  pagebreak(weak: true, to: "odd")
+  // re-define the page numbering, but still don't show it
   set page(numbering: "i", footer: [])
   make-title(args)
+  // again break to a right-handed page
+  pagebreak(weak: true, to: "odd")
+  // from now on, show some page numbers
   set page(footer: get-pagination(args.pagination-align))
   declare-page(args)
   abstract(
@@ -95,10 +103,11 @@
     }),
     // footer: get-pagination(args.pagination-align)
   )
-  // the intro maybe should start on a right-hand side, but in any case the right-hand pages must be "odd"!
-  pagebreak(to: "odd")
-  //empty-page()
+  // the intro should start on a right-handed page
+  pagebreak(weak: true, to: "odd")
+  // set the page numbering to its main body format
   set page(numbering: "1")
+  // and re-start the count
   counter(page).update(1)
 
   // *now* fix the show rule to require a pagebreak before any new chapter, until https://github.com/typst/typst/issues/2841 is resolved

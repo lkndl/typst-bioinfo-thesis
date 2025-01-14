@@ -35,16 +35,14 @@
 }
 
 #let make-cover(args) = {
-  // define a page numbering, but don't show it
-  set page(numbering: "a", footer: [])
   // load the correct module for this flavour
   import str(args.flavour + "-covers.typ") : *
   cover-page(args) 
 }
 
 #let make-title(args) = {
+  // re-start the page numbering
   counter(page).update(1)
-  pagebreak(weak: true, to: "odd")
   // load the correct module for this flavour
   import str(args.flavour + "-covers.typ") : *
   title-page(args, submission-info-table(args))  
