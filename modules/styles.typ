@@ -44,20 +44,15 @@
 
 // fix reference styles: level 1 headings are chapter, not Section
 #let supplements(it, lang) = {
-  if "level" not in it.fields() {
+  if "depth" not in it.fields() {
     return none
   } else if lang == "en" {
     // per default "Section", "Section", ...
-    return ([chapter], [section], [subsection]).at(it.level - 1, default: [subsection])
+    return ([chapter], [section], [subsection]).at(it.depth - 1, default: [subsection])
   } else {
     // i just made these up:
-    return ([Kapitel], [Abschnitt], [Absatz]).at(it.level - 1, default: [Absatz])
+    return ([Kapitel], [Abschnitt], [Absatz]).at(it.depth - 1, default: [Absatz])
   }
-}
-
-#let headingspaced(it) = {
-  block(above: 2 * space, below: space / 2, 
-  [#v(space)#text(size: 20pt, it)])
 }
 
 #let heading-styles(lang, numbering-depth, body) = {
@@ -65,15 +60,19 @@
   set heading(
       //numbering: "1.1",
       numbering: (..nums) => {
+        // open problem https://github.com/typst/typst/discussions/5650
         let nums = nums.pos()
-        if nums.len() <= numbering-depth {
-          numbering("1.1", ..nums)
+        if nums.len() > numbering-depth {
+          nums = nums.slice(numbering-depth + 1)
+          return numbering("1.1", ..()) + h(-0.3em) // https://github.com/typst/typst/blob/a4ac4e656267e718a5cf60d1e959f74b2b7346f3/crates/typst-library/src/model/heading.rs#L223
+        } else if nums.len() <= numbering-depth {
+          return numbering("1.1", ..nums)
         }},
       outlined: true, 
       supplement: it => supplements(it, lang))
   
-  // add space above chapters, later enforce a pagebreak
-  show heading.where(level: 1): it => headingspaced(it)
+  // add pagebreak before and space above chapters
+  show heading.where(level: 1): it => pagebreak(weak: true) + block(above: 2 * space, below: space / 2, [#v(space)#text(size: 20pt, it)])
 
   show heading.where(level: 2): it => [
     #block(above: 11mm, below: 6mm)[#it] ]
@@ -81,15 +80,14 @@
   // show heading.where(level: 3): it => [
   //   #block(above: 11mm, below: 6mm)[#it.body] ] // hide the numbering
   
-  body
-}
-
-#let break-before-chapter(on: true, body) = {
-  // turning this on and off is a fix until https://github.com/typst/typst/issues/2841 is resolved
-  if on {
-    show heading.where(level: 1): it => pagebreak(weak: true) + headingspaced(it)
-  } else {
-    show heading.where(level: 1): it => headingspaced(it)
+  show ref: it => {
+    let el = it.element
+    if el != none and el.func() == heading and el.level > numbering-depth {
+      link(el.location(), box[#el.supplement~"#el.body"])
+    } else {
+      // Other references as usual.
+      it
+    }
   }
 
   body

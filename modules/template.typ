@@ -110,9 +110,6 @@
   // and re-start the count
   counter(page).update(1)
 
-  // *now* fix the show rule to require a pagebreak before any new chapter, until https://github.com/typst/typst/issues/2841 is resolved
-  show heading.where(level: 1): it => pagebreak(weak: true) + headingspaced(it)
-
   // The main content
   body
 
