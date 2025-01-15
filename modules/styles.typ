@@ -83,7 +83,7 @@
   show ref: it => {
     let el = it.element
     if el != none and el.func() == heading and el.level > numbering-depth {
-      link(el.location(), box[#el.supplement~"#el.body"])
+      link(el.location(), box[#el.supplement~#emph(el.body)])
     } else {
       // Other references as usual.
       it
