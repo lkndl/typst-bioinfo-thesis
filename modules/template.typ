@@ -52,7 +52,7 @@
     margin: (bottom: 3cm, rest: 2.5cm),
   )
   set text(
-    font: "Helvetica Neue",
+    font: "Noto Sans", // "Helvetica Neue",
     size: 12pt,
     lang: args.lang,
     hyphenate: true,
