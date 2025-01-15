@@ -1,5 +1,9 @@
 name: compile Typst documents
-on: [push, workflow_dispatch, pull_request]
+on:
+  workflow_dispatch:
+  push:
+    tags:
+    - '**'
 permissions:
   contents: write
 jobs:
@@ -11,9 +15,9 @@ jobs:
     - name: Compile Typst Files
       uses: ammar-ahmed22/compile-typst-action@v1
       with:
-        source_paths: main.typ
-        output_paths: main-gh-action.pdf
-        fonts_path: modules/fonts
+        source_paths: 'main.typ'
+        output_paths: 'main-gh-action.pdf'
+        fonts_path: 'modules/fonts'
     - name: Upload Artifacts
       uses: actions/upload-artifact@v3
       with:
