@@ -1,11 +1,13 @@
 name: compile Typst documents
 on: [push, workflow_dispatch, pull_request]
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Repository
-    - uses: actions/checkout@v4
+      uses: actions/checkout@v4
     - name: Compile Typst Files
       uses: ammar-ahmed22/compile-typst-action@v1
       with:
