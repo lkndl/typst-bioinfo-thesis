@@ -1,22 +1,19 @@
-name: build Typst document
+name: compile Typst documents
 on: [push, workflow_dispatch, pull_request]
-
 jobs:
-  build_typst_documents:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Typst
-        uses: lvignoli/typst-action@main
-        with:
-          source_file: main.typ
-          options: |
-              --font-path
-              modules/fonts
-      
-      - name: Upload PDF file
-        uses: actions/upload-artifact@v4
-        with:
-          path: main.pdf
+    - name: Checkout Repository
+    - uses: actions/checkout@v4
+    - name: Compile Typst Files
+      uses: ammar-ahmed22/compile-typst-action@v1
+      with:
+        source_paths: main.typ
+        output_paths: main-gh-action.pdf
+        fonts_path: modules/fonts
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: PDF
+        path: '**/*.pdf'
