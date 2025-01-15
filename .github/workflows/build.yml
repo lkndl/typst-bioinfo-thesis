@@ -10,16 +10,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Repository
+    - name: Checkout
       uses: actions/checkout@v4
-    - name: Compile Typst Files
-      uses: ammar-ahmed22/compile-typst-action@v1
+    - name: Typst
+      uses: lkndl/typst-action@main
       with:
-        source_paths: 'main.typ'
-        output_paths: 'main-gh-action.pdf'
-        fonts_path: 'modules/fonts'
-    - name: Upload Artifacts
+        source_file: main.typ
+        output_file: tests/main.pdf
+        options: |
+            --font-path
+            modules/fonts
+    - name: Check existence of output file
+      run: |
+        test -e "tests/main.pdf"
+    - name: Upload
       uses: actions/upload-artifact@v3
       with:
         name: PDF
-        path: '**/*.pdf'
+        path: tests/*.pdf
