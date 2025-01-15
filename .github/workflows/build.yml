@@ -12,6 +12,9 @@ jobs:
         uses: lvignoli/typst-action@main
         with:
           source_file: main.typ
+          options: |
+              --font-path
+              modules/fonts
       
       - name: Upload PDF file
         uses: actions/upload-artifact@v4
