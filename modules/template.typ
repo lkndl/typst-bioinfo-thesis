@@ -55,8 +55,10 @@
     font: "Helvetica Neue",
     size: 12pt,
     lang: args.lang,
+    hyphenate: true,
+    costs: (hyphenation: 100%)
   )
-  set par(justify: true, leading: .88em)
+  set par(justify: true, linebreaks: "optimized", leading: .85em, spacing: 2em)
   set block(above: 8pt, below: 24pt)
   // define the `code` font style
   show raw: set text(..raw-style)

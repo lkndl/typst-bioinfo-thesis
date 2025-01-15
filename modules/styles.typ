@@ -1,7 +1,7 @@
 
 #let quantum = 8pt
 #let page-num-width = 2em
-#let space = 2.2cm
+#let space = 4.4cm
 #let raw-style = (font: "IBM Plex Mono", size: 1.2em) // the default font size in the doc defines what 1em is, and this always looked a bit too small, therefore scale it
 
 // use a state to manage whether the caption title or the full thing is displayed at different places in the do
@@ -72,13 +72,13 @@
       supplement: it => supplements(it, lang))
   
   // add pagebreak before and space above chapters
-  show heading.where(level: 1): it => pagebreak(weak: true) + block(above: 2 * space, below: space / 2, [#v(space)#text(size: 20pt, it)])
+  show heading.where(level: 1): it => pagebreak(weak: true) + block(above: 2 * space, below: space / 4, [#v(space)#text(size: 20pt, it)])
 
   show heading.where(level: 2): it => [
     #block(above: 11mm, below: 6mm)[#it] ]
 
-  // show heading.where(level: 3): it => [
-  //   #block(above: 11mm, below: 6mm)[#it.body] ] // hide the numbering
+  show heading.where(level: 3): it => [
+    #block(above: 8mm)[#it.body] ] // hide the numbering
   
   show ref: it => {
     let el = it.element

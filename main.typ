@@ -58,7 +58,9 @@ That's important, but I have no idea how to do it. Maybe @tv-problems can help u
   gap: 1em,
   caption: figure.caption(position: top, flex-caption([Example full-width image, caption above], [. Most people do not have computer science degrees, and they would probably count as more _method-y_ than _material-y_?])),
 ) <tv-problems>
+
 Also: #lorem(200)
+
 #figure(
   image("/images/dingos.jpg", width: 100%),
   placement: auto,
@@ -67,7 +69,7 @@ Also: #lorem(200)
 ) <dingos>
 
 === method A
-This is a little bit of math and a link to @results, which you can find on #ref-page(<results>):
+Link to an unnumbered section: @related is far up there, as is @others. This is a little bit of math and a link to @results, which you can find on #ref-page(<results>): #v(1fr)
 
 #set math.equation(numbering: "(1)")
 
@@ -84,7 +86,7 @@ With @ratio, we get:
 $ F_n = floor(1 / sqrt(5) phi.alt^n) $
 
 
-Link to an unnumbered section: @related is far up there, as is @others.
+
 
 #wrap-fig(
   fig: align(right, image("images/laser_pointer_more_power.png", width: 60%)), 
