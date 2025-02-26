@@ -90,7 +90,7 @@
     args.german-abstract, args.english-abstract)
   // totally optional:
   // acknowledgements(args.lang, [Thanks everyone!], title: "thx")
-  table-of-contents(args.lang, simple: true)
+  table-of-contents(args.lang, simple: false)
 
   ////////////////////////////////////////////////
   // some more main body setup 

@@ -1,6 +1,6 @@
 #import "styles.typ": *
 #import "footers.typ": *
-#import "@preview/outrageous:0.3.0"
+#import "@preview/outrageous:0.4.0"
 
 #let submission-info-table(args) = {
   set align(center + bottom)
@@ -85,6 +85,7 @@
 #let table-of-contents(lang, simple: true) = {
   pagebreak(weak: false, to: "even")
   set heading(numbering: none, outlined: false, bookmarked: true, level: 1)
+  show outline.entry: set block(spacing: .65em)
 
   let toc-title = if lang == "en" [Contents] else [Inhaltsverzeichnis]
   if simple {
@@ -99,7 +100,7 @@
     ]
     return
   } else {
-    // more complicated table-of-contents
+    // more complicated but still nicer table-of-contents, as of typst 0.13.0 (d6b0d68f)
     let extractor(it) = {
       let loc = it.element.location()
       let title = it.element.body
@@ -137,7 +138,7 @@
       number = if number == none {none} else [#box(width: 1.4em, link(loc, number))]
       v(6pt) // free space above
       strong( // bold
-        layoutor(number, title, loc, it.page, //str(counter(page).at(loc).first()),//display(loc.page-numbering()), 
+        layoutor(number, title, loc, it.page(), //str(counter(page).at(loc).first()),//display(loc.page-numbering()), 
           indent: 0pt, fill: h(1fr)))
     }
     
@@ -146,7 +147,7 @@
     ): it => {
       let (number, title, loc) = extractor(it)
       number = [#box(width: 2em, link(loc, number))]
-      layoutor(number, title, loc, it.page, indent: 5pt)
+      layoutor(number, title, loc, it.page(), indent: 5pt)
     }
 
     show outline.entry.where(
@@ -154,7 +155,7 @@
     ): it => {
       let (number, title, loc) = extractor(it)
       number = none // hide numbering
-      layoutor(number, title, loc, it.page, indent: 2em + 5pt) // more ident, but actually not
+      layoutor(number, title, loc, it.page(), indent: 2em + 5pt) // more ident, but actually not
     }
 
     [#outline(title: toc-title, depth: 3) <toc> #metadata("toc-end") <toc-end>]
